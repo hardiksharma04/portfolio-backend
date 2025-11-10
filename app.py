@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import mysql.connector
 from db_config import get_connection
+import os
+from waitress import serve
 
 app = Flask(__name__)
 CORS(app)
@@ -19,7 +21,10 @@ def add_project():
 
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO projects (title, description, link) VALUES (%s, %s, %s)", (title, description, link))
+    cursor.execute(
+        "INSERT INTO projects (title, description, link) VALUES (%s, %s, %s)",
+        (title, description, link)
+    )
     conn.commit()
     conn.close()
 
@@ -34,5 +39,8 @@ def get_projects():
     conn.close()
     return jsonify(projects)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    # Use PORT provided by Render, default to 5000 for local testing
+    port = int(os.environ.get("PORT", 5000))
+    # Bind to 0.0.0.0 so Render can access it externally
+    serve(app, host="0.0.0.0", port=port)
