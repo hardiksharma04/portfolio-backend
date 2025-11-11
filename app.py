@@ -6,7 +6,7 @@ import os
 from waitress import serve
 
 app = Flask(__name__)
-CORS(app, origins=["https://portfolio-frontend-indol-sigma.vercel.app"])
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 
 @app.route('/')
