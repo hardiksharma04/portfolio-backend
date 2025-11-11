@@ -6,7 +6,8 @@ import os
 from waitress import serve
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["https://portfolio-frontend-indol-sigma.vercel.app"])
+
 
 @app.route('/')
 def home():
@@ -27,7 +28,6 @@ def add_project():
     )
     conn.commit()
     conn.close()
-
     return jsonify({"message": "Project Added ✅"})
 
 @app.route('/projects', methods=['GET'])
